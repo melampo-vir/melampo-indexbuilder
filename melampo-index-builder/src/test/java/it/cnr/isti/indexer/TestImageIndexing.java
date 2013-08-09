@@ -1,11 +1,10 @@
 package it.cnr.isti.indexer;
 
 import static org.junit.Assert.assertTrue;
-import it.cnr.isti.featuresExtraction.FeaturesExtractionException;
+import it.cnr.isti.feature.extraction.FeatureExtractionException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -13,20 +12,13 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class TestImageIndexing {
+public class TestImageIndexing extends BaseIndexingTest {
 
 	private ImageIndexing test;
-	File melampoHome = null;
 	IndexHelper helper = new IndexHelper(); 
 	
-	public File getMelampoHome() throws IOException {
-		if (melampoHome == null)
-			melampoHome = (new File("./src/test/resources/melampohome")).getCanonicalFile();
-		return melampoHome;
-	}
-
 	@Test
-	public void testImageIndexing() throws ImageIndexingException, FeaturesExtractionException {
+	public void testImageIndexing() throws ImageIndexingException, FeatureExtractionException {
 		try {
 			openIndex();
 			
@@ -84,8 +76,7 @@ public class TestImageIndexing {
 
 	public void openIndex() throws IOException {
 
-		File confDir = new File(getMelampoHome() + "/conf");
-		test = new ImageIndexing(confDir);
+		test = new ImageIndexing(getConfDir());
 
 		try {
 			test.openIndex();
@@ -95,7 +86,7 @@ public class TestImageIndexing {
 		}
 	}
 
-	public int insertImageObject() throws IOException, ImageIndexingException, FeaturesExtractionException {
+	public int insertImageObject() throws IOException, ImageIndexingException, FeatureExtractionException {
 			InputStream imageObj = new FileInputStream(new File(
 					getMelampoHome() + "/index/testImage.jpg"));
 			test.insertImage("img1", imageObj);
