@@ -1,7 +1,7 @@
 package it.cnr.isti.indexer;
 
-import it.cnr.isti.featuresExtraction.FeaturesExtractionException;
-import it.cnr.isti.featuresExtraction.Image2Features;
+import it.cnr.isti.feature.extraction.FeatureExtractionException;
+import it.cnr.isti.feature.extraction.Image2Features;
 import it.cnr.isti.melampo.index.indexing.LireIndexer;
 import it.cnr.isti.melampo.index.settings.LireSettings;
 import it.cnr.isti.melampo.vir.exceptions.VIRException;
@@ -55,9 +55,9 @@ public class ImageIndexing  {
 	}
 
 	public void insertImage(String docID, URL imageURL)
-			throws ImageIndexingException, FeaturesExtractionException {
+			throws ImageIndexingException, FeatureExtractionException {
 
-		String imgFeatures = img2Features.image2Features(imageURL);
+		String imgFeatures = img2Features.extractFeatures(imageURL);
 		InputStream is = new ByteArrayInputStream(imgFeatures.getBytes());
 
 		// read it with BufferedReader
@@ -78,9 +78,9 @@ public class ImageIndexing  {
 	}
 
 	public void insertImage(String docID, InputStream imageObj)
-			throws ImageIndexingException, FeaturesExtractionException {
+			throws ImageIndexingException, FeatureExtractionException {
 
-		String imgFeatures = img2Features.image2Features(imageObj);
+		String imgFeatures = img2Features.extractFeatures(imageObj);
 		InputStream is = new ByteArrayInputStream(imgFeatures.getBytes());
 
 		// read it with BufferedReader
@@ -115,9 +115,9 @@ public class ImageIndexing  {
 	}
 
 	public void updateImage(String docID, InputStream imageObj)
-			throws ImageIndexingException, FeaturesExtractionException {
+			throws ImageIndexingException, FeatureExtractionException {
 
-		String imgFeatures = img2Features.image2Features(imageObj);
+		String imgFeatures = img2Features.extractFeatures(imageObj);
 		InputStream is = new ByteArrayInputStream(imgFeatures.getBytes());
 
 		// read it with BufferedReader
@@ -135,8 +135,8 @@ public class ImageIndexing  {
 	}
 
 	public void updateImage(String docID, URL imageURL)
-			throws ImageIndexingException, FeaturesExtractionException {
-		String imgFeatures = img2Features.image2Features(imageURL);
+			throws ImageIndexingException, FeatureExtractionException {
+		String imgFeatures = img2Features.extractFeatures(imageURL);
 		InputStream is = new ByteArrayInputStream(imgFeatures.getBytes());
 
 		// read it with BufferedReader

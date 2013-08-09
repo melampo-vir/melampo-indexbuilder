@@ -1,4 +1,4 @@
-package it.cnr.isti.featuresExtraction;
+package it.cnr.isti.feature.extraction;
 
 import it.cnr.isti.melampo.tools.Tools;
 
@@ -16,7 +16,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
 public class Image2Features {
 
 	private String[][] extractorsImpl;
-	private LireFeature[] lireExtractors;
+	LireFeature[] lireExtractors;
 
 	public Image2Features(File confDir) throws IOException,
 			InstantiationException, IllegalAccessException,
@@ -33,44 +33,44 @@ public class Image2Features {
 		}
 	}
 
-	public String image2Features(InputStream imgStream)
-			throws FeaturesExtractionException {
+	public String extractFeatures(InputStream imgStream)
+			throws FeatureExtractionException {
 		BufferedImage img;
 		try {
 			img = ImageIO.read(imgStream);
 		} catch (IOException e) {
-			throw new FeaturesExtractionException(e);
+			throw new FeatureExtractionException(e);
 		}
 		String res = extractFeatures(img);
 		return res;
 	}
 
-	public String image2Features(File imgFile)
-			throws FeaturesExtractionException {
+	public String extractFeatures(File imgFile)
+			throws FeatureExtractionException {
 		BufferedImage img;
 		try {
 			img = ImageIO.read(new FileInputStream(imgFile));
 		} catch (IOException e) {
-			throw new FeaturesExtractionException(e);
+			throw new FeatureExtractionException(e);
 		}
 		String res = extractFeatures(img);
 		return res;
 	}
 
-	public String image2Features(URL imgURL)
-			throws FeaturesExtractionException {
+	public String extractFeatures(URL imgURL)
+			throws FeatureExtractionException {
 		BufferedImage img;
 		try {
 			img = ImageIO.read(imgURL);
 		} catch (IOException e) {
-			throw new FeaturesExtractionException(e);
+			throw new FeatureExtractionException(e);
 		}
 		String res = extractFeatures(img);
 		return res;
 	}
 
 	private String extractFeatures(BufferedImage buffImg)
-			throws FeaturesExtractionException {
+			throws FeatureExtractionException {
 		StringBuilder features = new StringBuilder();
 		features.append("<IRImage>\n<lire>\n");
 		for (int i = 0; i < extractorsImpl.length; i++) {
@@ -82,7 +82,7 @@ public class Image2Features {
 				features.append(lireExtractors[i].getStringRepresentation());
 				features.append("</").append(extractorName).append(">\n");
 			} catch (Exception e) {
-				new FeaturesExtractionException("error, unable to extract " + extractorName);
+				new FeatureExtractionException("error, unable to extract " + extractorName);
 			}
 		}
 		features.append("</lire>\n</IRImage>");
