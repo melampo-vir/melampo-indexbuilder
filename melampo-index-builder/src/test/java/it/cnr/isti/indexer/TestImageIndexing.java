@@ -14,12 +14,11 @@ import org.junit.Test;
 
 public class TestImageIndexing extends BaseIndexingTest {
 
-	private ImageIndexing test;
+	private ImageIndexing imageIndexing;
 	IndexHelper helper = new IndexHelper(); 
 	
 	@Test
-	public void testImageIndexing() throws ImageIndexingException, FeatureExtractionException {
-		try {
+	public void testImageIndexing() throws ImageIndexingException, FeatureExtractionException, IOException {
 			openIndex();
 			
 			Long start = System.currentTimeMillis();
@@ -36,17 +35,10 @@ public class TestImageIndexing extends BaseIndexingTest {
 			end = System.currentTimeMillis();
 			
 			System.out.println("Close index & commit time: " + (end - start));
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 	
 	@Test
-	public void testBulkIndexing() {
-		try {
+	public void testBulkIndexing() throws IOException, ImageIndexingException {
 			openIndex();
 			
 			Long start = System.currentTimeMillis();
@@ -66,39 +58,29 @@ public class TestImageIndexing extends BaseIndexingTest {
 			end = System.currentTimeMillis();
 			
 			System.out.println("Close index time: " + (end - start));
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		
 	}
 
-	public void openIndex() throws IOException {
+	public void openIndex() throws IOException, ImageIndexingException {
 
-		test = new ImageIndexing(getConfDir());
+		imageIndexing = new ImageIndexing(getConfDir());
 
-		try {
-			test.openIndex();
-		} catch (ImageIndexingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		imageIndexing.openIndex();		
 	}
 
 	public int insertImageObject() throws IOException, ImageIndexingException, FeatureExtractionException {
 			InputStream imageObj = new FileInputStream(new File(
 					getMelampoHome() + "/index/testImage.jpg"));
-			test.insertImage("img1", imageObj);
+			imageIndexing.insertImage("img1", imageObj);
 			
 			return 1;
 	}
 
 	public void closeIndex() {
 		try {
-			test.closeIndex();
+			imageIndexing.closeIndex();
 		} catch (ImageIndexingException e) {
-			// TODO Auto-generated catch block
+			//log exception
 			e.printStackTrace();
 		}
 	}
@@ -114,7 +96,7 @@ public class TestImageIndexing extends BaseIndexingTest {
 
 //				InputStream imageObj = new FileInputStream(new File(
 //						getMelampoHome() + "/index/testImage.jpg"));
-				test.insertImage(thumbnail.getKey(), new URL(thumbnail.getValue()));
+				imageIndexing.insertImage(thumbnail.getKey(), new URL(thumbnail.getValue()));
 				indexedItems++;
 			
 			} catch (Exception e) {
