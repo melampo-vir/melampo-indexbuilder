@@ -94,9 +94,11 @@ public class TestImageIndexing extends BaseIndexingTest {
 		for (Map.Entry<String, String> thumbnail : thumbsMap.entrySet()) {
 			try {
 
-//				InputStream imageObj = new FileInputStream(new File(
-//						getMelampoHome() + "/index/testImage.jpg"));
-				imageIndexing.insertImage(thumbnail.getKey(), new URL(thumbnail.getValue()));
+				if(thumbnail.getValue().startsWith("http"))//index by URL
+					imageIndexing.insertImage(thumbnail.getKey(), new URL(thumbnail.getValue()));
+				else //Index by local file
+					imageIndexing.insertImage(thumbnail.getKey(), new FileInputStream(thumbnail.getValue()));
+				
 				indexedItems++;
 			
 			} catch (Exception e) {
