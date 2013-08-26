@@ -2,6 +2,8 @@ package it.cnr.isti.indexer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,10 +25,16 @@ public class IndexHelper {
 
 	public Map<String, String> getThumbnailsMap(String filePath)
 			throws IOException {
+		final File file = new File(filePath);
+		return getThumbnailsMap(file);
+	}
+
+	public Map<String, String> getThumbnailsMap(final File file)
+			throws FileNotFoundException, IOException {
 		Map<String, String> thumbnails = new HashMap<String, String>();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new FileReader(filePath));
+			reader = new BufferedReader(new FileReader(file));
 			// BufferedReader reader = new BufferedReader(new
 			// FileReader("/collection_07501_thumbnails.csv"));
 
@@ -34,6 +42,11 @@ public class IndexHelper {
 			String[] values;
 
 			while ((europeanaUriAndObject = reader.readLine()) != null) {
+				//ignore comments
+				if(europeanaUriAndObject.startsWith("#"))
+					continue;
+				
+				//parse values
 				values = europeanaUriAndObject.split(";");
 				thumbnails.put(values[0], values[1]);
 			}
