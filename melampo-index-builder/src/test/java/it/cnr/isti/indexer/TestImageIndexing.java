@@ -1,6 +1,7 @@
 package it.cnr.isti.indexer;
 
 import static org.junit.Assert.assertTrue;
+import it.cnr.isti.config.index.IndexConfiguration;
 import it.cnr.isti.exception.ImageIndexingException;
 import it.cnr.isti.feature.extraction.FeatureExtractionException;
 
@@ -71,9 +72,19 @@ public class TestImageIndexing extends BaseIndexingTest {
 	public void openIndex(String dataset) throws IOException,
 			ImageIndexingException {
 
-		imageIndexing = new ImageIndexing(dataset);
-
+		if(imageIndexing == null)
+			imageIndexing = new ImageIndexing(dataset, getIndexConfig());
+		
 		imageIndexing.openIndex();
+	}
+
+	protected IndexConfiguration getIndexConfig() {
+		return null;
+	}
+
+	protected ImageIndexing getImageIndexing(String dataset) {
+		
+		return imageIndexing;
 	}
 
 	public int insertImageObject() throws IOException, ImageIndexingException,

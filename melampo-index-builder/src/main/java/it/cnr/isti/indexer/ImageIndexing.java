@@ -38,9 +38,11 @@ public class ImageIndexing  {
 //		this.confDir = confDir;
 //	}
 
-	public ImageIndexing(String dataset) {
+	public ImageIndexing(String dataset, IndexConfiguration indexConfig) {
 		this.dataset = dataset;
-		configuration = new IndexConfigurationImpl();
+		if(indexConfig == null)
+			configuration = new IndexConfigurationImpl();
+		else configuration = indexConfig;
 		if(dataset == null)
 			this.dataset = getConfiguration().getDefaultDataset();
 	}
