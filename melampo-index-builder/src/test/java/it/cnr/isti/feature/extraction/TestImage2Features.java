@@ -3,7 +3,10 @@ package it.cnr.isti.feature.extraction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import it.cnr.isti.config.index.IndexConfiguration;
+import it.cnr.isti.config.index.IndexConfigurationImpl;
 import it.cnr.isti.indexer.BaseIndexingTest;
+import it.cnr.isti.indexer.ImageIndexing;
 import it.cnr.isti.vir.features.FeaturesCollectorArr;
 import it.cnr.isti.vir.features.FeaturesCollectorException;
 import it.cnr.isti.vir.features.mpeg7.vd.MPEG7VDFormatException;
@@ -70,7 +73,10 @@ public class TestImage2Features extends BaseIndexingTest {
 			FactoryConfigurationError, MPEG7VDFormatException,
 			XMLStreamException, InvocationTargetException,
 			NoSuchMethodException, FeaturesCollectorException {
-		Image2Features featureExtractor = new Image2Features(getConfDir());
+		
+		IndexConfiguration configuration = new IndexConfigurationImpl();
+		
+		Image2Features featureExtractor = new Image2Features(configuration.getIndexConfFolder(TEST_DATASET));
 
 		long start = System.currentTimeMillis();
 		String xmlFeatures = featureExtractor.extractFeatures(image);

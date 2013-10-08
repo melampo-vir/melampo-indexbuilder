@@ -1,6 +1,7 @@
 package it.cnr.isti.indexer;
 
 import static org.junit.Assert.assertTrue;
+import it.cnr.isti.exception.ImageIndexingException;
 import it.cnr.isti.feature.extraction.FeatureExtractionException;
 
 import java.io.File;
@@ -15,72 +16,83 @@ import org.junit.Test;
 public class TestImageIndexing extends BaseIndexingTest {
 
 	private ImageIndexing imageIndexing;
-	IndexHelper helper = new IndexHelper(); 
-	
+	IndexHelper helper = new IndexHelper();
+	final String DATASET_TEST = "test";
+
 	@Test
-	public void testImageIndexing() throws ImageIndexingException, FeatureExtractionException, IOException {
-			openIndex();
-			
-			Long start = System.currentTimeMillis();
-			
-			int objects = insertImageObject();
-			
-			Long end = System.currentTimeMillis();
-			System.out.println("Indexing time: " + (end - start));
-			
-			assertTrue(objects == 1);
-			
-			start = System.currentTimeMillis();  
-			closeIndex();
-			end = System.currentTimeMillis();
-			
-			System.out.println("Close index & commit time: " + (end - start));
+	public void testImageIndexing() throws ImageIndexingException,
+			FeatureExtractionException, IOException {
+		openIndex(DATASET_TEST);
+
+		Long start = System.currentTimeMillis();
+
+		int objects = insertImageObject();
+
+		Long end = System.currentTimeMillis();
+		System.out.println("Indexing time: " + (end - start));
+
+		assertTrue(objects == 1);
+
+		start = System.currentTimeMillis();
+		closeIndex();
+		end = System.currentTimeMillis();
+
+		System.out.println("Close index & commit time: " + (end - start));
 	}
-	
+
 	@Test
 	public void testBulkIndexing() throws IOException, ImageIndexingException {
-			openIndex();
-			
-			Long start = System.currentTimeMillis();
-			
-			int objects = insertImageObjectsFromFile(getMelampoHome() + "/datasets/test_dataset.csv");
-			
-			Long end = System.currentTimeMillis();
-			System.out.println("Indexing time: " + (end - start));
-			
-			assertTrue(objects > 0);
-			
-			//TODO: find solution for Invalid icc profile: invalid number of icc markers
-			//assertTrue(objects == 349); //only 299 are successfully indexed now
-			
-			start = System.currentTimeMillis();  
-			closeIndex();
-			end = System.currentTimeMillis();
-			
-			System.out.println("Close index time: " + (end - start));
+		openIndex(DATASET_TEST);
+
+		Long start = System.currentTimeMillis();
+
+		File testDatasetFile = new File(imageIndexing.getConfiguration()
+				.getDatasetsFolder(), "test.csv");
+
+		int objects = insertImageObjectsFromFile(testDatasetFile.toString());
+
+		Long end = System.currentTimeMillis();
+		System.out.println("Indexing time: " + (end - start));
+
+		assertTrue(objects > 0);
+
+		// TODO: find solution for Invalid icc profile: invalid number of icc
+		// markers
+		// assertTrue(objects == 349); //only 299 are successfully indexed now
+
+		start = System.currentTimeMillis();
+		closeIndex();
+		end = System.currentTimeMillis();
+
+		System.out.println("Close index time: " + (end - start));
+
+	}
+
+	public void openIndex(String dataset) throws IOException,
+			ImageIndexingException {
+
+		imageIndexing = new ImageIndexing(dataset);
+
+		imageIndexing.openIndex();
+	}
+
+	public int insertImageObject() throws IOException, ImageIndexingException,
+			FeatureExtractionException {
 		
-	}
+		File testImage = new File(imageIndexing.getConfiguration()
+				.getDatasetsFolder(), "testImage.jpg");
+		
+		InputStream imageObj = new FileInputStream(testImage);
+		imageIndexing.insertImage("img1", imageObj);
 
-	public void openIndex() throws IOException, ImageIndexingException {
-
-		imageIndexing = new ImageIndexing(getConfDir());
-
-		imageIndexing.openIndex();		
-	}
-
-	public int insertImageObject() throws IOException, ImageIndexingException, FeatureExtractionException {
-			InputStream imageObj = new FileInputStream(new File(
-					getMelampoHome() + "/index/testImage.jpg"));
-			imageIndexing.insertImage("img1", imageObj);
-			
-			return 1;
+		return 1;
 	}
 
 	public void closeIndex() {
 		try {
 			imageIndexing.closeIndex();
 		} catch (ImageIndexingException e) {
-			//log exception
+			// log exception
 			e.printStackTrace();
 		}
 	}
@@ -94,25 +106,31 @@ public class TestImageIndexing extends BaseIndexingTest {
 		for (Map.Entry<String, String> thumbnail : thumbsMap.entrySet()) {
 			try {
 
-				if(thumbnail.getValue().startsWith("http"))//index by URL
-					imageIndexing.insertImage(thumbnail.getKey(), new URL(thumbnail.getValue()));
-				else //Index by local file
-					imageIndexing.insertImage(thumbnail.getKey(), new FileInputStream(thumbnail.getValue()));
-				
+				if (thumbnail.getValue().startsWith("http"))// index by URL
+					imageIndexing.insertImage(thumbnail.getKey(), new URL(
+							thumbnail.getValue()));
+				else
+					// Index by local file
+					imageIndexing.insertImage(thumbnail.getKey(),
+							new FileInputStream(thumbnail.getValue()));
+
 				indexedItems++;
-			
+
 			} catch (Exception e) {
-				System.out.println("Image indexing errors occured: " + e.getMessage());
-				System.out.println("skip image: " + thumbnail.getKey() + "->" + thumbnail.getValue());
-				
-				//e.printStackTrace();
+				System.out.println("Image indexing errors occured: "
+						+ e.getMessage());
+				System.out.println("skip image: " + thumbnail.getKey() + "->"
+						+ thumbnail.getValue());
+
+				// e.printStackTrace();
 				skippedItems++;
 			}
 		}
-		System.out.println("Items successfully inserted in index: " + indexedItems);
+		System.out.println("Items successfully inserted in index: "
+				+ indexedItems);
 		System.out.println("Skipped Items: " + skippedItems);
-		
+
 		return indexedItems;
 	}
-	
+
 }

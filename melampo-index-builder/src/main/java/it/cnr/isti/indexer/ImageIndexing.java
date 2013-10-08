@@ -1,10 +1,12 @@
 package it.cnr.isti.indexer;
 
+import it.cnr.isti.config.index.IndexConfiguration;
+import it.cnr.isti.config.index.IndexConfigurationImpl;
+import it.cnr.isti.exception.ImageIndexingException;
 import it.cnr.isti.feature.extraction.FeatureExtractionException;
 import it.cnr.isti.feature.extraction.Image2Features;
 import it.cnr.isti.melampo.index.indexing.LireIndexer;
 import it.cnr.isti.melampo.index.settings.LireSettings;
-import it.cnr.isti.melampo.vir.exceptions.VIRException;
 import it.cnr.isti.vir.features.FeaturesCollectorArr;
 import it.cnr.isti.vir.features.mpeg7.LireObject;
 import it.cnr.isti.vir.id.IDString;
@@ -28,17 +30,34 @@ public class ImageIndexing  {
 
 	private LireSettings settings;
 	private Image2Features img2Features;
-	private File confDir;
+	private IndexConfiguration configuration;
+	private String dataset;
+	
+//	@Deprecated
+//	public ImageIndexing(File confDir) {
+//		this.confDir = confDir;
+//	}
 
-	public ImageIndexing(File confDir) {
-		this.confDir = confDir;
+	public ImageIndexing(String dataset) {
+		this.dataset = dataset;
+		configuration = new IndexConfigurationImpl();
+		if(dataset == null)
+			this.dataset = getConfiguration().getDefaultDataset();
 	}
-
+	
 	public void openIndex() throws ImageIndexingException {
 		CoPhIRv2Reader.setFeatures(LireMetric.reqFeatures);
+		//TODO: implement index initialization
+		
 		try {
+			File confDir = getConfiguration().getIndexConfFolder(getDataset());
 			img2Features = new Image2Features(confDir);
-			setVariables();
+			//new LireSettings(new File(confDir, "LIRE_MP7ALL.properties"));
+			settings = getConfiguration().getLireSettings(getDataset()); 
+			// coll = settings.getFCArchives().getArchive(0);
+			mp7cIndex = new LireIndexer();
+			mp7cIndex.OpenIndex(settings);
+	
 		} catch (Exception e) {
 			throw new ImageIndexingException("Error opening the image index ",
 					e);
@@ -68,9 +87,7 @@ public class ImageIndexing  {
 			// coll.add(features);
 			LireObject obj = new LireObject(features);
 			mp7cIndex.addDocument(obj, docID);
-			// } catch (ArchiveException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
+			
 		} catch (Exception e) {
 			throw new ImageIndexingException("Error indexing " + docID, e);
 		}
@@ -96,13 +113,6 @@ public class ImageIndexing  {
 		}
 
 		// coll.add(features);
-	}
-
-	private void setVariables() throws IOException, VIRException {
-		settings = new LireSettings(new File(confDir, "LIRE_MP7ALL.properties"));
-		// coll = settings.getFCArchives().getArchive(0);
-		mp7cIndex = new LireIndexer();
-		mp7cIndex.OpenIndex(settings);
 	}
 
 	public void deleteImage(String docID) throws ImageIndexingException {
@@ -161,6 +171,22 @@ public class ImageIndexing  {
 			throw new ImageIndexingException("Error optimizing index ", e);
 		}
 
+	}
+
+	public IndexConfiguration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(IndexConfiguration indexConf) {
+		this.configuration = indexConf;
+	}
+
+	public String getDataset() {
+		return dataset;
+	}
+
+	public void setDataset(String dataset) {
+		this.dataset = dataset;
 	}
 
 }
