@@ -74,7 +74,7 @@ public class TestImage2Features extends BaseIndexingTest {
 			XMLStreamException, InvocationTargetException,
 			NoSuchMethodException, FeaturesCollectorException {
 		
-		IndexConfiguration configuration = new IndexConfigurationImpl();
+		IndexConfiguration configuration = getIndexConfiguration();
 		
 		Image2Features featureExtractor = new Image2Features(configuration.getIndexConfFolder(TEST_DATASET));
 
@@ -107,5 +107,10 @@ public class TestImage2Features extends BaseIndexingTest {
 		writer.close();
 		
 		return secs;
+	}
+
+	protected IndexConfiguration getIndexConfiguration() {
+		IndexConfiguration configuration = new IndexConfigurationImpl();
+		return configuration;
 	}
 }

@@ -23,7 +23,8 @@ public class TestImageIndexing extends BaseIndexingTest {
 	@Test
 	public void testImageIndexing() throws ImageIndexingException,
 			FeatureExtractionException, IOException {
-		openIndex(DATASET_TEST);
+		String dataset = DATASET_TEST; 
+		openIndex(dataset);
 
 		Long start = System.currentTimeMillis();
 
@@ -42,18 +43,25 @@ public class TestImageIndexing extends BaseIndexingTest {
 	}
 
 	@Test
-	public void testBulkIndexing() throws IOException, ImageIndexingException {
-		openIndex(DATASET_TEST);
+	public void testBuildTestIndex() throws IOException, ImageIndexingException {
+		String dataset = DATASET_TEST; 
+		indexDataset(dataset);
+
+	}
+
+	protected void indexDataset(String dataset) throws IOException,
+			ImageIndexingException {
+		openIndex(dataset);
 
 		Long start = System.currentTimeMillis();
 
 		File testDatasetFile = new File(imageIndexing.getConfiguration()
-				.getDatasetsFolder(), "test.csv");
+				.getDatasetsFolder(), dataset+".csv");
 
 		int objects = insertImageObjectsFromFile(testDatasetFile.toString());
 
 		Long end = System.currentTimeMillis();
-		System.out.println("Indexing time: " + (end - start));
+		System.out.println("Indexing time for dataset " + dataset + ": " + (end - start));
 
 		assertTrue(objects > 0);
 
@@ -66,7 +74,6 @@ public class TestImageIndexing extends BaseIndexingTest {
 		end = System.currentTimeMillis();
 
 		System.out.println("Close index time: " + (end - start));
-
 	}
 
 	public void openIndex(String dataset) throws IOException,
