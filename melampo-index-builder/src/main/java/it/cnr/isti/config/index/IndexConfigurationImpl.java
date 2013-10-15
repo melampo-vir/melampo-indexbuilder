@@ -39,6 +39,15 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	}
 	
 	@Override
+	public File getDatasetFile(String dataset) {
+		if(dataset == null)
+			return new File(getDatasetsFolder(), getDefaultDataset() + ".csv");
+		else
+			return new File(getDatasetsFolder(), dataset+".csv");
+	}
+	
+	
+	@Override
 	public File getIndexConfFolder(String dataset) {
 		return new File(getIndexFolder(dataset), CONF_FOLDER);
 	}

@@ -55,9 +55,8 @@ public class TestImageIndexing extends BaseIndexingTest {
 
 		Long start = System.currentTimeMillis();
 
-		File testDatasetFile = new File(imageIndexing.getConfiguration()
-				.getDatasetsFolder(), dataset+".csv");
-
+		File testDatasetFile = imageIndexing.getConfiguration().getDatasetFile(dataset);
+		
 		int objects = insertImageObjectsFromFile(testDatasetFile.toString());
 
 		Long end = System.currentTimeMillis();
