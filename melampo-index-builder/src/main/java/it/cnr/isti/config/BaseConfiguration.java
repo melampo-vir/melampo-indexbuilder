@@ -20,6 +20,8 @@ public abstract class BaseConfiguration implements Configuration {
 	protected static final String IMAGE_FX_FILE = "image-fx.properties";
 	protected static final String CONF_FOLDER = "conf";
 	protected static final String DATASETS_FOLDER = "datasets";
+	protected static final String IMAGES_FOLDER = "image";
+	
 	protected static final String PROP_IMAGE_INDEX_HOME = "image.index.home";
 	protected static final String PROP_DATA_SET_DEFAULT = "dataset.default";
 	

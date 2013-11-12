@@ -22,8 +22,12 @@ public interface IndexConfiguration extends Configuration{
 
 	public File getIndexFolder(String dataset);
 
+	public File getIndexImagesFolder(String dataset);
+	
 	public File getDatasetsFolder();
 
 	public File getDatasetFile(String dataset);
+	
+	
 
 }

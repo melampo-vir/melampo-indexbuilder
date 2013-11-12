@@ -83,4 +83,9 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 				FEATURES_ARCHIVE_FILE);
 	}
 
+	@Override
+	public File getIndexImagesFolder(String dataset) {
+		return new File(getIndexFolder(dataset), IMAGES_FOLDER);
+	}
+
 }
