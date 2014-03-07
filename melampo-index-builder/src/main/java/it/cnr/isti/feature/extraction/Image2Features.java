@@ -5,11 +5,14 @@ import it.cnr.isti.melampo.tools.Tools;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+
+import org.apache.log4j.Logger;
 
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
@@ -17,6 +20,10 @@ public class Image2Features {
 
 	private String[][] extractorsImpl;
 	LireFeature[] lireExtractors;
+	
+	protected Logger getLogger() {
+		return Logger.getLogger(getClass());
+	}
 
 	public Image2Features(File confDir) throws IOException,
 			InstantiationException, IllegalAccessException,
@@ -35,41 +42,40 @@ public class Image2Features {
 
 	public String extractFeatures(InputStream imgStream)
 			throws FeatureExtractionException {
-		BufferedImage img;
+		
+		String res = null;
 		try {
-			img = ImageIO.read(imgStream);
+			BufferedImage img = ImageIO.read(imgStream);
+			res = extractFeatures(img);
 		} catch (IOException e) {
 			throw new FeatureExtractionException(e);
+		}finally{
+				closeStream(imgStream);
 		}
-		String res = extractFeatures(img);
 		return res;
 	}
 
 	public String extractFeatures(File imgFile)
 			throws FeatureExtractionException {
-		BufferedImage img;
+		
 		try {
-			img = ImageIO.read(new FileInputStream(imgFile));
-		} catch (IOException e) {
+			return extractFeatures(new FileInputStream(imgFile));
+		} catch (FileNotFoundException e) {
 			throw new FeatureExtractionException(e);
 		}
-		String res = extractFeatures(img);
-		return res;
 	}
 
 	public String extractFeatures(URL imgURL)
 			throws FeatureExtractionException {
-		BufferedImage img;
+		
 		try {
-			img = ImageIO.read(imgURL);
+			return extractFeatures(ImageIO.read(imgURL));
 		} catch (IOException e) {
 			throw new FeatureExtractionException(e);
-		}
-		String res = extractFeatures(img);
-		return res;
+		}		
 	}
 
-	private String extractFeatures(BufferedImage buffImg)
+	String extractFeatures(BufferedImage buffImg)
 			throws FeatureExtractionException {
 		StringBuilder features = new StringBuilder();
 		features.append("<IRImage>\n<lire>\n");
@@ -88,5 +94,16 @@ public class Image2Features {
 		features.append("</lire>\n</IRImage>");
 		//System.out.println("features:" + features.toString());
 		return features.toString();
+	}
+	
+	protected void closeStream(InputStream imgStream) {
+		try {
+			if(imgStream != null)
+				imgStream.close();
+		} catch (IOException e) {
+			//this exception shouldn't occur. if it occures it is not harmfull
+			getLogger().trace("Error when closing imgStream");
+			getLogger().debug("Exception: ", e);
+		}
 	}
 }
