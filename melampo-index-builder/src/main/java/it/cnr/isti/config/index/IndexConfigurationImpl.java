@@ -84,8 +84,20 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	}
 
 	@Override
-	public File getIndexImagesFolder(String dataset) {
+	public File getImageFolder(String dataset) {
 		return new File(getIndexFolder(dataset), IMAGES_FOLDER);
 	}
+	
+	
+	@Override
+	public File getImageFile(String dataset, String objectId) {
+		
+		return new File(getImageFolder(dataset), getFileName(objectId));
+	}
+
+	protected String getFileName(String objectId) {
+		return objectId + DEFAULT_IMAGE_EXT;
+	}
+		
 
 }

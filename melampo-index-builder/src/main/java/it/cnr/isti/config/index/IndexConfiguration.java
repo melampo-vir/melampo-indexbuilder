@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public interface IndexConfiguration extends Configuration{
 
+	final String DEFAULT_IMAGE_EXT = ".jpg";
 	public File getFeaturesArchiveFile(String dataset);
 
 	public LireSettings getLireSettings(String dataset) throws IOException,
@@ -22,7 +23,9 @@ public interface IndexConfiguration extends Configuration{
 
 	public File getIndexFolder(String dataset);
 
-	public File getIndexImagesFolder(String dataset);
+	public File getImageFolder(String dataset);
+	
+	public File getImageFile(String dataset, String objectId);
 	
 	public File getDatasetsFolder();
 
