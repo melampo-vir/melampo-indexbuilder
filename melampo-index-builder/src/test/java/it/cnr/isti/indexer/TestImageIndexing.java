@@ -97,7 +97,7 @@ public class TestImageIndexing extends BaseIndexingTest {
 			FeatureExtractionException {
 		
 		File testImage = new File(imageIndexing.getConfiguration()
-				.getDatasetsFolder(), "testImage.jpg");
+				.getDatasetsFolderAsFile(), "testImage.jpg");
 		
 		InputStream imageObj = new FileInputStream(testImage);
 		imageIndexing.insertImage("img1", imageObj);

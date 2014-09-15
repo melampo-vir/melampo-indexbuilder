@@ -34,16 +34,16 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	}
 
 	@Override
-	public File getDatasetsFolder() {
+	public File getDatasetsFolderAsFile() {
 		return new File(getIndexHomeFolder(), DATASETS_FOLDER);
 	}
 	
 	@Override
 	public File getDatasetFile(String dataset) {
 		if(dataset == null)
-			return new File(getDatasetsFolder(), getDefaultDataset() + ".csv");
+			return new File(getDatasetsFolderAsFile(), getDefaultDataset() + ".csv");
 		else
-			return new File(getDatasetsFolder(), dataset+".csv");
+			return new File(getDatasetsFolderAsFile(), dataset+".csv");
 	}
 	
 	
@@ -84,7 +84,7 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	}
 
 	@Override
-	public File getImageFolder(String dataset) {
+	public File getImageFolderAsFile(String dataset) {
 		return new File(getIndexFolder(dataset), IMAGES_FOLDER);
 	}
 	
@@ -92,7 +92,7 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	@Override
 	public File getImageFile(String dataset, String objectId) {
 		
-		return new File(getImageFolder(dataset), getFileName(objectId));
+		return new File(getImageFolderAsFile(dataset), getFileName(objectId));
 	}
 
 	protected String getFileName(String objectId) {
