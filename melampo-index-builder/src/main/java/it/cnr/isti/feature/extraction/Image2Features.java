@@ -88,7 +88,8 @@ public class Image2Features {
 				features.append(lireExtractors[i].getStringRepresentation());
 				features.append("</").append(extractorName).append(">\n");
 			} catch (Exception e) {
-				new FeatureExtractionException("error, unable to extract " + extractorName);
+				//System.out.println(e);
+				throw new FeatureExtractionException(new RuntimeException("error, unable to extract " + extractorName, e));
 			}
 		}
 		features.append("</lire>\n</IRImage>");

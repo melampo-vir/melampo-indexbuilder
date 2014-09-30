@@ -83,5 +83,11 @@ public interface IndexConfiguration extends Configuration{
 	public File getDatasetFile(String dataset);
 	
 	
+	/**
+	 * returns the full classname of the imageLocator class
+	 * @return
+	 */
+	public abstract String getImageLocatorClass();
+	
 
 }

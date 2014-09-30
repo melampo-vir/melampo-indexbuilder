@@ -98,6 +98,11 @@ public class IndexConfigurationImpl extends BaseConfiguration implements IndexCo
 	protected String getFileName(String objectId) {
 		return objectId + DEFAULT_IMAGE_EXT;
 	}
+
+	@Override
+	public String getImageLocatorClass() {
+		return getConfigProperty(PROP_THUMBNAIL_LOCATOR);
+	}
 		
 
 }

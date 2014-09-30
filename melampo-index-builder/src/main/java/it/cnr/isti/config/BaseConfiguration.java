@@ -24,6 +24,7 @@ public abstract class BaseConfiguration implements Configuration {
 	
 	protected static final String PROP_IMAGE_INDEX_HOME = "image.index.home";
 	protected static final String PROP_DATA_SET_DEFAULT = "dataset.default";
+	public static final String PROP_THUMBNAIL_LOCATOR = "thumbnail.locator.class";
 	
 	protected Logger log = Logger.getLogger(getClass());
 	private Properties properties = new Properties();
