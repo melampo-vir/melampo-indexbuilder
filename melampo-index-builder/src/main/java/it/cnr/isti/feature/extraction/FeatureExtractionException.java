@@ -10,6 +10,9 @@ public class FeatureExtractionException extends Exception {
 		super(cause);
 	}
 
+	public FeatureExtractionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 	/**
 	 * 
 	 */
